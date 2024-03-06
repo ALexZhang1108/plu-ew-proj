@@ -1,75 +1,60 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
+    <div class="content-container">
+      <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
 
-      <div class="title-container">
-        <h3 class="title">Login Form</h3>
-      </div>
+        <div class="title-container">
+          <h3 class="title-text">SIGN IN</h3>
 
-      <el-form-item prop="username">
-        <span class="svg-container">
-          <svg-icon icon-class="user" />
-        </span>
-        <el-input
-          ref="username"
-          v-model="loginForm.username"
-          placeholder="Username"
-          name="username"
-          type="text"
-          tabindex="1"
-          autocomplete="on"
-        />
-      </el-form-item>
+        </div>
 
-      <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
-        <el-form-item prop="password">
+        <el-form-item prop="email">
           <span class="svg-container">
-            <svg-icon icon-class="password" />
+            <svg-icon icon-class="user" />
           </span>
           <el-input
-            :key="passwordType"
-            ref="password"
-            v-model="loginForm.password"
-            :type="passwordType"
-            placeholder="Password"
-            name="password"
-            tabindex="2"
+            ref="email"
+            v-model="loginForm.email"
+            placeholder="Email"
+            name="email"
+            type="text"
+            tabindex="1"
             autocomplete="on"
-            @keyup.native="checkCapslock"
-            @blur="capsTooltip = false"
-            @keyup.enter.native="handleLogin"
           />
-          <span class="show-pwd" @click="showPwd">
-            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-          </span>
         </el-form-item>
-      </el-tooltip>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
+        <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
+          <el-form-item prop="password">
+            <span class="svg-container">
+              <svg-icon icon-class="password" />
+            </span>
+            <el-input
+              :key="passwordType"
+              ref="password"
+              v-model="loginForm.password"
+              :type="passwordType"
+              placeholder="Password"
+              name="password"
+              tabindex="2"
+              autocomplete="on"
+              @keyup.native="checkCapslock"
+              @blur="capsTooltip = false"
+              @keyup.enter.native="handleLogin"
+            />
+            <span class="show-pwd" @click="showPwd">
+              <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+            </span>
+          </el-form-item>
+        </el-tooltip>
+        <a href="#" class="forgot-password">Forgot password?</a>
+        <el-button class="social-button">Facebook</el-button>
+        <el-button class="social-button">Twitter</el-button>
+        <el-button class="social-button">Google</el-button>
+        <el-button :type="primary" style="width:100%;margin-bottom:30px;" class="content-button" @click.native.prevent="handleLogin">Login</el-button>
 
-      <div style="position:relative">
-        <div class="tips">
-          <span>Username : admin</span>
-          <span>Password : any</span>
-        </div>
-        <div class="tips">
-          <span style="margin-right:18px;">Username : editor</span>
-          <span>Password : any</span>
-        </div>
+      </el-form>
 
-        <el-button class="thirdparty-button" type="primary" @click="showDialog=true">
-          Or connect with
-        </el-button>
-      </div>
-    </el-form>
-
-    <el-dialog title="Or connect with" :visible.sync="showDialog">
-      Can not be simulated on local, so please combine you own business simulation! ! !
-      <br>
-      <br>
-      <br>
-      <social-sign />
-    </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -248,15 +233,55 @@ $cursor: #fff;
 </style>
 
 <style lang="scss" scoped>
-$bg:#2d3a4b;
+$bg:#252856;
 $dark_gray:#889aa4;
 $light_gray:#eee;
+
+.el-input {
+  border-radius: 40px; /* Adjust this value to change the border radius */
+}
+.forgot-password {
+  display: block;
+  text-align: center;
+  margin-top: 2px ;
+  margin-bottom: 2px;
+  padding: 10px;
+  color: #ea5820;
+}
 
 .login-container {
   min-height: 100%;
   width: 100%;
   background-color: $bg;
   overflow: hidden;
+
+  .content-container {
+    background-color: #f2f2f2; // 设置背景颜色
+    border-radius: 30px; // 设置圆角
+    padding: 20px; // 设置内边距
+    position: absolute; // 设置绝对定位
+    top: 50%; // 从顶部偏移50%
+    left: 50%; // 从左边偏移50%
+    transform: translate(-50%, -50%); // 使用 transform 属性将元素向左和向上移动50%
+    height: 45%;// prototype 里就随便依托
+    width: 32%; // prototype 里就随便依托
+    text-align: center; // 设置文本居中
+
+    .title-text {
+      font-size: 45px;
+      margin-bottom: 10px;
+      color: $bg;
+      font-weight: bold;
+    }
+
+    /* no subtext in this page */
+    .subtitle-text {
+      font-size: 16px;
+      margin-bottom: 20px;
+      color: $bg;
+    }
+
+  }
 
   .login-form {
     position: relative;
@@ -281,19 +306,23 @@ $light_gray:#eee;
 
   .svg-container {
     padding: 6px 5px 6px 15px;
-    color: $dark_gray;
+    color: $bg;
     vertical-align: middle;
     width: 30px;
     display: inline-block;
   }
 
   .title-container {
-    position: relative;
-
+    position: absolute; // 设置绝对定位
+    top: -35px; // 从顶部向上偏移150px
+    left: 10px; //别动
+    width: 100%; // 设置宽度为100%，使其占满整个容器
+    text-align: center; // 设置文本居中
+    // 现在title的位置整好了
     .title {
       font-size: 26px;
-      color: $light_gray;
-      margin: 0px auto 40px auto;
+      color: $bg;
+      margin: 0 0;
       text-align: center;
       font-weight: bold;
     }
@@ -313,6 +342,18 @@ $light_gray:#eee;
     position: absolute;
     right: 0;
     bottom: 6px;
+  }
+
+  .content-button {
+    display: block; // 让按钮上下排列
+    width: 224px; // 设置按钮宽度
+    height: 55px; // 设置按钮高度
+    border-radius: 20px;
+    line-height: 10px; // 让按钮内的文字垂直居中
+    background-color: #6c6aeb; // 设置按钮背景颜色
+    text-align: center; // 设置按钮内的文字居中
+    color: $light_gray; // 设置按钮内的文字颜色
+    margin: 1px auto; // 让按钮在容器中居中
   }
 
   @media only screen and (max-width: 470px) {
