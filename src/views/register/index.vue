@@ -4,17 +4,28 @@
       <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
 
         <div class="title-container">
-          <h3 class="title-text">SIGN IN</h3>
+          <h3 class="title-text">CREATE ACCOUNT</h3>
+
         </div>
 
-        <div class="minititle-container">
-          <h4 class="minitext">Email</h4>
-        </div>
-
-        <el-form-item prop="email">
-
+        <el-form-item prop="realname">
           <span class="svg-container">
             <svg-icon icon-class="user" />
+          </span>
+          <el-input
+            ref="realname"
+            v-model="loginForm.realname"
+            placeholder="Name"
+            name="name"
+            type="text"
+            tabindex="1"
+            autocomplete="on"
+          />
+        </el-form-item>
+
+        <el-form-item prop="email">
+          <span class="svg-container">
+            <svg-icon icon-class="email" />
           </span>
           <el-input
             ref="email"
@@ -22,13 +33,11 @@
             placeholder="Email"
             name="email"
             type="text"
-            tabindex="1"
+            tabindex="2"
             autocomplete="on"
           />
         </el-form-item>
-        <div class="minititle-container">
-          <h4 class="minitext">Password</h4>
-        </div>
+
         <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
           <el-form-item prop="password">
             <span class="svg-container">
@@ -52,27 +61,32 @@
             </span>
           </el-form-item>
         </el-tooltip>
-
-        <a href="#" class="forgot-password">Forgot password?</a>
-
-        <h4 class="minitext2">Or sign up with social account</h4>
-
-        <div class="social-icons">
-          <a href="#" class="social-icon">
-            <svg-icon icon-class="google" />
-          </a>
-          <a href="#" class="social-icon">
-            <svg-icon icon-class="facebook" />
-          </a>
-          <a href="#" class="social-icon">
-            <svg-icon icon-class="wechat" />
-          </a>
-        </div>
-
-        <el-button :type="primary" class="content-button" @click.native.prevent="handleLogin">Sign in</el-button>
+        <el-form-item prop="confirmPassword">
+          <span class="svg-container">
+            <svg-icon icon-class="password" />
+          </span>
+          <el-input
+            ref="confirmPassword"
+            v-model="loginForm.confirmPassword"
+            placeholder="Confirm Password"
+            name="confirmPassword"
+            type="password"
+            tabindex="3"
+            autocomplete="on"
+          />
+          <span class="show-pwd" @click="showPwd">
+            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+          </span>
+        </el-form-item>
 
       </el-form>
 
+      <div style="display: flex; justify-content: space-between;align-items: center; margin-bottom: 10px;">
+        <el-checkbox v-model="agreedToTerms" style="margin-right: 10px;" />
+        <span>By registering you agree with our Terms & Conditions and Privacy Policy</span>
+
+        <el-button class="social-button" :disabled="!agreedToTerms">Done</el-button>
+      </div>
     </div>
   </div>
 </template>
@@ -91,6 +105,15 @@ export default {
         callback()
       }
     }
+
+    const validateConfirmPassword = (rule, value, callback) => {
+      if (value !== this.loginForm.password) {
+        callback(new Error('The two passwords do not match'))
+      } else {
+        callback()
+      }
+    }
+
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
         callback(new Error('The password can not be less than 6 digits'))
@@ -101,17 +124,20 @@ export default {
     return {
       loginForm: {
         username: 'admin',
-        password: '111111'
+        password: '111111',
+        confirmPassword: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        password: [{ required: true, trigger: 'blur', validator: validatePassword }],
+        confirmPassword: [{ required: true, trigger: 'blur', validator: validateConfirmPassword }]
       },
       passwordType: 'password',
       capsTooltip: false,
       loading: false,
       showDialog: false,
       redirect: undefined,
+      agreedToTerms: false,
       otherQuery: {}
     }
   },
@@ -223,19 +249,16 @@ $cursor: #fff;
     display: inline-block;
     height: 47px;
     width: 85%;
-    border-radius: 67px;
 
     input {
       background: transparent;
       border: 0px;
       -webkit-appearance: none;
-      border-radius: 67px;
+      border-radius: 0px;
       padding: 12px 5px 12px 15px;
-      color: #000000;
+      color: $light_gray;
       height: 47px;
-      caret-color: #000000;
-      font-size: 15px;
-      font-family: Inter, sans-serif;
+      caret-color: $cursor;
 
       &:-webkit-autofill {
         box-shadow: 0 0 0px 1000px $bg inset !important;
@@ -247,12 +270,8 @@ $cursor: #fff;
   .el-form-item {
     border: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(0, 0, 0, 0.1);
-    border-radius: 67px;
+    border-radius: 5px;
     color: #454545;
-  }
-
-  .el-button {
-    border-radius: 99px;
   }
 }
 </style>
@@ -280,42 +299,6 @@ $light_gray:#eee;
   background-color: $bg;
   overflow: hidden;
 
-  .title-container {
-    position: absolute; // 设置绝对定位
-    top: 0px; // 从顶部向上偏移150px
-    left: 0px; //别动
-    width: 100%; // 设置宽度为100%，使其占满整个容器
-    text-align: center; // 设置文本居中
-
-  }
-
-.title-text {
-  font-family: Inter, sans-serif;
-  font-size: 30px;
-  color: $bg;
-  font-weight: bold;
-}
-
-  .minititle-container {
-    margin: 10px; // 根据需要调整间距
-    text-align: left; // 将文本靠左对齐
-  }
-
-  .minitext {
-    font-size: 14px; // 设置字体大小
-    font-family: Inter, sans-serif; // 设置字体
-    color: $bg; // 设置字体颜色
-  }
-
-  .minitext2{
-    font-size: 14px; // 设置字体大小
-    font-family: Inter, sans-serif; // 设置字体
-    font-weight: normal;
-    color: #3664ae; // 设置字体颜色
-    margin-top: 10px;
-    margin-bottom: 8px;
-  }
-
   .content-container {
     background-color: #f2f2f2; // 设置背景颜色
     border-radius: 30px; // 设置圆角
@@ -324,9 +307,23 @@ $light_gray:#eee;
     top: 50%; // 从顶部偏移50%
     left: 50%; // 从左边偏移50%
     transform: translate(-50%, -50%); // 使用 transform 属性将元素向左和向上移动50%
-    height: 540px;// prototype 里就随便依托
-    width: 540px; // prototype 里就随便依托
+    height: 53%;// prototype 里就随便依托
+    width: 32%; // prototype 里就随便依托
     text-align: center; // 设置文本居中
+
+    .title-text {
+      font-size: 45px;
+      margin-bottom: 10px;
+      color: $bg;
+      font-weight: bold;
+    }
+
+    /* no subtext in this page */
+    .subtitle-text {
+      font-size: 16px;
+      margin-bottom: 20px;
+      color: $bg;
+    }
 
   }
 
@@ -334,7 +331,7 @@ $light_gray:#eee;
     position: relative;
     width: 520px;
     max-width: 100%;
-    padding: 70px 30px 18px 30px;
+    padding: 160px 35px 0;
     margin: 0 auto;
     overflow: hidden;
   }
@@ -359,6 +356,22 @@ $light_gray:#eee;
     display: inline-block;
   }
 
+  .title-container {
+    position: absolute; // 设置绝对定位
+    top: -35px; // 从顶部向上偏移150px
+    left: 10px; //别动
+    width: 100%; // 设置宽度为100%，使其占满整个容器
+    text-align: center; // 设置文本居中
+    // 现在title的位置整好了
+    .title {
+      font-size: 26px;
+      color: $bg;
+      margin: 0 0;
+      text-align: center;
+      font-weight: bold;
+    }
+  }
+
   .show-pwd {
     position: absolute;
     right: 10px;
@@ -377,48 +390,19 @@ $light_gray:#eee;
 
   .content-button {
     display: block; // 让按钮上下排列
-    width: 107px; // 设置按钮宽度
-    height: 53px; // 设置按钮高度
-
-    border-radius: 81px;
-    line-height: 0px; // 让按钮内的文字垂直居中
+    width: 224px; // 设置按钮宽度
+    height: 55px; // 设置按钮高度
+    border-radius: 20px;
+    line-height: 10px; // 让按钮内的文字垂直居中
     background-color: #6c6aeb; // 设置按钮背景颜色
     text-align: center; // 设置按钮内的文字居中
     color: $light_gray; // 设置按钮内的文字颜色
-    margin: 0px auto; // 让按钮在容器中居中
-    font-size: 20px; // 设置按钮内的文字大小
+    margin: 1px auto; // 让按钮在容器中居中
   }
 
-  .social-icons {
-    display: flex;
-    justify-content: space-between;
-    width: 256px;
-    margin: 0 auto; // 让社交图标在容器中居中
-    margin-top: 0px;
-    margin-bottom: 10px; // 根据需要调整
-
-    .social-icon {
-      display: flex;
-      width: 40px; // 根据需要调整
-      height: 40px; // 根据需要调整
-      border-radius: 50%;
-      background-color: #d9d9d9; // 设置社交图标背景颜色
-      justify-content: center;
-      align-items: center;
-      margin: 0 auto; // 让社交图标在容器中居中
-
-      .svg-icon {
-        width: 26px; // 根据需要调整
-        height: 26px; // 根据需要调整
-      }
-    }
-  }
-
-  @media (max-width: 600px) {
-    .content-container {
-      width: 90%; // 调整宽度
-      height: auto; // 调整高度
-      overflow: auto; // 添加滚动条
+  @media only screen and (max-width: 470px) {
+    .thirdparty-button {
+      display: none;
     }
   }
 }
