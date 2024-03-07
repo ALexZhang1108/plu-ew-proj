@@ -7,108 +7,23 @@
       <el-form ref="loginForm" :model="registerForm" :rules="registerRules" class="register-form" autocomplete="on" label-position="left">
 
         <div class="title-container">
-          <h3 class="title-text">CREATE ACCOUNT</h3>
+          <h3 class="title-text">FORGOT PASSWORD</h3>
+        </div>
+        <div class="email-icon">
+          <svg-icon icon-class="email2" />
+        </div>
+        <div class="iforgot-container1">
+          <h4 class="iforgot-title">An e-mail has been sent to the following e-mail address:</h4>
         </div>
 
-        <div class="minititle-container">
-          <h4 class="minitext">Name</h4>
+        <div class="iforgot-container2">
+          <h5 class="iforgot-content">xxxxx@xxxxxx.com</h5>
+        </div>
+        <div class="iforgot-container2">
+          <h5 class="iforgot-content">Please check your email, we have sent you a link to reset your password. </h5>
         </div>
 
-        <el-form-item prop="email">
-
-          <span class="svg-container">
-            <svg-icon icon-class="user" />
-          </span>
-          <el-input
-            ref="email"
-            v-model="registerForm.email"
-            placeholder="Email"
-            name="email"
-            type="text"
-            tabindex="1"
-            autocomplete="on"
-          />
-        </el-form-item>
-        <div class="minititle-container">
-          <h4 class="minitext">Email</h4>
-        </div>
-
-        <el-form-item prop="email">
-
-          <span class="svg-container">
-            <svg-icon icon-class="user" />
-          </span>
-          <el-input
-            ref="email"
-            v-model="registerForm.email"
-            placeholder="Email"
-            name="email"
-            type="text"
-            tabindex="1"
-            autocomplete="on"
-          />
-        </el-form-item>
-
-        <div class="minititle-container">
-          <h4 class="minitext">Password</h4>
-        </div>
-        <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
-          <el-form-item prop="password">
-            <span class="svg-container">
-              <svg-icon icon-class="password" />
-            </span>
-            <el-input
-              :key="passwordType"
-              ref="password"
-              v-model="registerForm.password"
-              :type="passwordType"
-              placeholder="Password"
-              name="password"
-              tabindex="2"
-              autocomplete="on"
-              @keyup.native="checkCapslock"
-              @blur="capsTooltip = false"
-              @keyup.enter.native="handleLogin"
-            />
-            <span class="show-pwd" @click="showPwd">
-              <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-            </span>
-          </el-form-item>
-        </el-tooltip>
-        <div class="minititle-container">
-          <h4 class="minitext">Confirm Password</h4>
-        </div>
-        <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
-          <el-form-item prop="password">
-            <span class="svg-container">
-              <svg-icon icon-class="password" />
-            </span>
-            <el-input
-              :key="passwordType"
-              ref="password"
-              v-model="registerForm.password"
-              :type="passwordType"
-              placeholder="Password"
-              name="password"
-              tabindex="2"
-              autocomplete="on"
-              @keyup.native="checkCapslock"
-              @blur="capsTooltip = false"
-              @keyup.enter.native="handleLogin"
-            />
-            <span class="show-pwd" @click="showPwd">
-              <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-            </span>
-          </el-form-item>
-        </el-tooltip>
-
-        <div class="checkbox-button-container">
-          <div class="terms-container">
-            <el-checkbox v-model="agree" class="terms-checkbox" />
-            <h5 class="minitext3">By registering you agree with our <a href="#" class="minitext3">Terms of Service</a> and <a href="#" class="minitext3">Privacy Policy</a></h5>
-          </div>
-          <el-button :type="primary" class="content-button" @click.native.prevent="handleLogin">Done</el-button>
-        </div>
+        <el-button :type="primary" class="content-button" @click.native.prevent="handleLogin">Sign in</el-button>
       </el-form>
 
     </div>
@@ -356,6 +271,7 @@ $light_gray:#eee;
   .minititle-container {
     margin: 10px; // 根据需要调整间距
     text-align: left; // 将文本靠左对齐
+
   }
 
   .minitext {
@@ -366,7 +282,7 @@ $light_gray:#eee;
 
   .minitext2{
     font-size: 14px; // 设置字体大小
-    font-family: "Microsoft JhengHei UI"; // 设置字体
+    font-family: Inter, sans-serif; // 设置字体
     font-weight: normal;
     color: #3664ae; // 设置字体颜色
     margin-top: 10px;
@@ -381,10 +297,42 @@ $light_gray:#eee;
     top: 50%; // 从顶部偏移50%
     left: 50%; // 从左边偏移50%
     transform: translate(-50%, -50%); // 使用 transform 属性将元素向左和向上移动50%
-    height: 640px;// prototype 里就随便依托
-    width: 540px; // prototype 里就随便依托
+    height: 521px;// prototype 里就随便依托
+    width: 534px; // prototype 里就随便依托
     text-align: center; // 设置文本居中
 
+  }
+
+  .email-icon{
+    margin: 10px; // 根据需要调整间距
+    text-align: center;
+
+    .svg-icon {
+      width: 85px; // 设置图标宽度
+      height: 85px; // 设置图标高度
+    }
+  }
+  .iforgot-container1 {
+    margin: 10px; // 根据需要调整间距
+    margin-top: 34px;
+    text-align: center;
+
+    .iforgot-title {
+      font-size: 20px; // 设置字体大小
+      font-family: "Microsoft JhengHei UI"; // 设置字体
+      color: $bg; // 设置字体颜色
+    }
+  }
+
+  .iforgot-container2{
+    margin: 10px; // 根据需要调整间距
+    text-align: center; // 将文本靠左对齐
+    margin-bottom: 30px;
+    .iforgot-content {
+      font-size: 14px; // 设置字体大小
+      font-family: "Microsoft JhengHei UI"; // 设置字体
+      color: $bg; // 设置字体颜色
+    }
   }
 
   .checkbox-button-container {
@@ -406,15 +354,11 @@ $light_gray:#eee;
       color: #6c6aeb;
     }
 
-    .content-button {
-      width: auto; // 让按钮的宽度自适应其内容
-    }
-
     .minitext3{
       flex:5;
       font-size: 12px; // 设置字体大小
-      font-family: "Microsoft JhengHei UI Light"; // 设置字体
-
+      font-family: Inter; // 设置字体
+      font-weight: lighter;
       color: $bg; // 设置字体颜色
       //靠左对齐
       text-align: left;
@@ -469,7 +413,7 @@ $light_gray:#eee;
 
   .content-button {
 
-    width: 107px; // 设置按钮宽度
+    width: auto; // 设置按钮宽度
     height: 53px; // 设置按钮高度
 
     border-radius: 81px;

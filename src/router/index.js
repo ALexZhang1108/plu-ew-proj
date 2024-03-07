@@ -63,6 +63,18 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    name: 'iforgot',
+    path: '/iforgot',
+    component: () => import('@/views/register/iforgot'),
+    hidden: true
+  },
+  {
+    name: 'reset',
+    path: '/reset',
+    component: () => import('@/views/register/iforgot2.vue'),
+    hidden: true
+  },
+  {
     path: '/login',
     component: () => import('@/views/login/index'),
     hidden: true

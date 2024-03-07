@@ -275,20 +275,24 @@ $light_gray:#f2f2f2;
   .content-container {
     background-color: #f2f2f2; // 设置背景颜色
     border-radius: 10px; // 设置圆角
-    padding: 20px; // 设置内边距
-    margin: 20px auto; // 设置外边距，使其居中
-    width: 80%; // 设置宽度
+    padding-top: 50px; // 设置内边距
+    margin: 0px auto; // 设置外边距，使其居中
+    width: 416px; // 设置宽度
+    height: 319px;
     text-align: center; // 设置文本居中
 
     .title-text {
       font-size: 30px;
+      font-family: Inter;
       margin-bottom: 10px;
       color: $bg;
       font-weight: bold;
+
     }
 
     .subtitle-text {
       font-size: 16px;
+      font-family: Inter;
       margin-bottom: 20px;
       color: $bg;
     }

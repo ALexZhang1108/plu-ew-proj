@@ -1,6 +1,9 @@
 <template>
   <div class="login-container">
     <div class="content-container">
+      <a href="#" class="back-button">
+        <svg-icon icon-class="back" />
+      </a>
       <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
 
         <div class="title-container">
@@ -14,7 +17,7 @@
         <el-form-item prop="email">
 
           <span class="svg-container">
-            <svg-icon icon-class="user" />
+            <svg-icon icon-class="email" />
           </span>
           <el-input
             ref="email"
@@ -280,6 +283,23 @@ $light_gray:#eee;
   background-color: $bg;
   overflow: hidden;
 
+  .back-button {
+    position: absolute; // 使用绝对定位
+    top: 36px; // 从顶部偏移10px
+    left: 30px; // 从左边偏移10px
+    width: 44px; // 设置宽度
+    height: 44px; // 设置高度
+
+    img {
+      width: 100%; // 让图片填满整个按钮
+      height: 100%; // 让图片填满整个按钮
+    }
+    .svg-icon {
+      width: 44px; // 设置图标宽度
+      height: 44px; // 设置图标高度
+    }
+  }
+
   .title-container {
     position: absolute; // 设置绝对定位
     top: 0px; // 从顶部向上偏移150px
@@ -294,6 +314,7 @@ $light_gray:#eee;
   font-size: 30px;
   color: $bg;
   font-weight: bold;
+  margin-top: 20px;
 }
 
   .minititle-container {
@@ -303,13 +324,13 @@ $light_gray:#eee;
 
   .minitext {
     font-size: 14px; // 设置字体大小
-    font-family: Inter, sans-serif; // 设置字体
+    font-family: "Microsoft JhengHei UI"; // 设置字体
     color: $bg; // 设置字体颜色
   }
 
   .minitext2{
     font-size: 14px; // 设置字体大小
-    font-family: Inter, sans-serif; // 设置字体
+    font-family: "Microsoft JhengHei UI"; // 设置字体
     font-weight: normal;
     color: #3664ae; // 设置字体颜色
     margin-top: 10px;
