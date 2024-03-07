@@ -1,12 +1,34 @@
 <template>
   <div class="login-container">
     <div class="content-container">
-      <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
+      <a href="#" class="back-button">
+        <svg-icon icon-class="back" />
+      </a>
+      <el-form ref="loginForm" :model="registerForm" :rules="registerRules" class="register-form" autocomplete="on" label-position="left">
 
         <div class="title-container">
-          <h3 class="title-text">SIGN IN</h3>
+          <h3 class="title-text">CREATE ACCOUNT</h3>
         </div>
 
+        <div class="minititle-container">
+          <h4 class="minitext">Name</h4>
+        </div>
+
+        <el-form-item prop="email">
+
+          <span class="svg-container">
+            <svg-icon icon-class="user" />
+          </span>
+          <el-input
+            ref="email"
+            v-model="registerForm.email"
+            placeholder="Email"
+            name="email"
+            type="text"
+            tabindex="1"
+            autocomplete="on"
+          />
+        </el-form-item>
         <div class="minititle-container">
           <h4 class="minitext">Email</h4>
         </div>
@@ -18,7 +40,7 @@
           </span>
           <el-input
             ref="email"
-            v-model="loginForm.email"
+            v-model="registerForm.email"
             placeholder="Email"
             name="email"
             type="text"
@@ -26,6 +48,7 @@
             autocomplete="on"
           />
         </el-form-item>
+
         <div class="minititle-container">
           <h4 class="minitext">Password</h4>
         </div>
@@ -37,7 +60,33 @@
             <el-input
               :key="passwordType"
               ref="password"
-              v-model="loginForm.password"
+              v-model="registerForm.password"
+              :type="passwordType"
+              placeholder="Password"
+              name="password"
+              tabindex="2"
+              autocomplete="on"
+              @keyup.native="checkCapslock"
+              @blur="capsTooltip = false"
+              @keyup.enter.native="handleLogin"
+            />
+            <span class="show-pwd" @click="showPwd">
+              <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+            </span>
+          </el-form-item>
+        </el-tooltip>
+        <div class="minititle-container">
+          <h4 class="minitext">Confirm Password</h4>
+        </div>
+        <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
+          <el-form-item prop="password">
+            <span class="svg-container">
+              <svg-icon icon-class="password" />
+            </span>
+            <el-input
+              :key="passwordType"
+              ref="password"
+              v-model="registerForm.password"
               :type="passwordType"
               placeholder="Password"
               name="password"
@@ -53,24 +102,13 @@
           </el-form-item>
         </el-tooltip>
 
-        <a href="#" class="forgot-password">Forgot password?</a>
-
-        <h4 class="minitext2">Or sign up with social account</h4>
-
-        <div class="social-icons">
-          <a href="#" class="social-icon">
-            <svg-icon icon-class="google" />
-          </a>
-          <a href="#" class="social-icon">
-            <svg-icon icon-class="facebook" />
-          </a>
-          <a href="#" class="social-icon">
-            <svg-icon icon-class="wechat" />
-          </a>
+        <div class="checkbox-button-container">
+          <div class="terms-container">
+            <el-checkbox v-model="agree" class="terms-checkbox"></el-checkbox>
+            <h5 class="minitext3">By registering you agree with our <a href="#" class="minitext3">Terms of Service</a> and <a href="#" class="minitext3">Privacy Policy</a></h5>
+          </div>
+          <el-button :type="primary" class="content-button" @click.native.prevent="handleLogin">Done</el-button>
         </div>
-
-        <el-button :type="primary" class="content-button" @click.native.prevent="handleLogin">Sign in</el-button>
-
       </el-form>
 
     </div>
@@ -99,11 +137,11 @@ export default {
       }
     }
     return {
-      loginForm: {
+      registerForm: {
         username: 'admin',
         password: '111111'
       },
-      loginRules: {
+      registerRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
@@ -112,6 +150,7 @@ export default {
       loading: false,
       showDialog: false,
       redirect: undefined,
+      agree: false,
       otherQuery: {}
     }
   },
@@ -131,9 +170,9 @@ export default {
     // window.addEventListener('storage', this.afterQRScan)
   },
   mounted() {
-    if (this.loginForm.username === '') {
+    if (this.registerForm.username === '') {
       this.$refs.username.focus()
-    } else if (this.loginForm.password === '') {
+    } else if (this.registerForm.password === '') {
       this.$refs.password.focus()
     }
   },
@@ -159,7 +198,7 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('user/login', this.loginForm)
+          this.$store.dispatch('user/login', this.registerForm)
             .then(() => {
               this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
               this.loading = false
@@ -274,6 +313,23 @@ $light_gray:#eee;
   color: #ea5820;
 }
 
+.back-button {
+  position: absolute; // 使用绝对定位
+  top: 36px; // 从顶部偏移10px
+  left: 30px; // 从左边偏移10px
+  width: 44px; // 设置宽度
+  height: 44px; // 设置高度
+
+  img {
+    width: 100%; // 让图片填满整个按钮
+    height: 100%; // 让图片填满整个按钮
+  }
+  .svg-icon {
+    width: 44px; // 设置图标宽度
+    height: 44px; // 设置图标高度
+  }
+}
+
 .login-container {
   min-height: 100%;
   width: 100%;
@@ -289,12 +345,13 @@ $light_gray:#eee;
 
   }
 
-.title-text {
-  font-family: Inter, sans-serif;
-  font-size: 30px;
-  color: $bg;
-  font-weight: bold;
-}
+  .title-text {
+    font-family: Inter, sans-serif;
+    font-size: 30px;
+    color: $bg;
+    font-weight: bold;
+    margin-top: 20px;
+  }
 
   .minititle-container {
     margin: 10px; // 根据需要调整间距
@@ -324,13 +381,51 @@ $light_gray:#eee;
     top: 50%; // 从顶部偏移50%
     left: 50%; // 从左边偏移50%
     transform: translate(-50%, -50%); // 使用 transform 属性将元素向左和向上移动50%
-    height: 540px;// prototype 里就随便依托
+    height: 640px;// prototype 里就随便依托
     width: 540px; // prototype 里就随便依托
     text-align: center; // 设置文本居中
 
   }
 
-  .login-form {
+  .checkbox-button-container {
+    display: flex; // 使用 flex 布局
+
+    align-items: center; // 使三个元素在垂直方向上居中
+
+    .terms-container {
+      display: flex; // 使用 flex 布局
+      align-items: center; // 使元素在垂直方向上居中
+      justify-content: flex-start; // 使元素在水平方向上靠左对齐
+      padding: 0; // 移除内边距
+      margin: 0; // 移除外边距
+    }
+
+
+
+    .terms-checkbox {
+      flex:1;
+      margin: 0; // 移除外边距
+      color: #6c6aeb;
+    }
+
+
+    .content-button {
+      width: auto; // 让按钮的宽度自适应其内容
+    }
+
+    .minitext3{
+      flex:5;
+      font-size: 12px; // 设置字体大小
+      font-family: Inter; // 设置字体
+      font-weight: lighter;
+      color: $bg; // 设置字体颜色
+      //靠左对齐
+      text-align: left;
+
+    }
+  }
+
+  .register-form {
     position: relative;
     width: 520px;
     max-width: 100%;
@@ -376,7 +471,7 @@ $light_gray:#eee;
   }
 
   .content-button {
-    display: block; // 让按钮上下排列
+
     width: 107px; // 设置按钮宽度
     height: 53px; // 设置按钮高度
 
@@ -385,7 +480,7 @@ $light_gray:#eee;
     background-color: #6c6aeb; // 设置按钮背景颜色
     text-align: center; // 设置按钮内的文字居中
     color: $light_gray; // 设置按钮内的文字颜色
-    margin: 0px auto; // 让按钮在容器中居中
+
     font-size: 20px; // 设置按钮内的文字大小
   }
 
