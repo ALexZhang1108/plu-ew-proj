@@ -1,12 +1,15 @@
 <template>
   <div class="login-container">
     <div class="content-container">
-      <a href="#" class="back-button">
-        <svg-icon icon-class="back" />
-      </a>
+
       <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
 
         <div class="title-container">
+          <div class="back-button"  >
+            <el-button type="text" @click="handleLogin">
+              <img src="@/assets/new_assets_for_easywear/back.svg" alt="Back">
+            </el-button>
+          </div>
           <h3 class="title-text">SIGN IN</h3>
         </div>
 
@@ -285,8 +288,8 @@ $light_gray:#eee;
 
   .back-button {
     position: absolute; // 使用绝对定位
-    top: 36px; // 从顶部偏移10px
-    left: 30px; // 从左边偏移10px
+    top: 8px; // 从顶部偏移10px
+    left: 20px; // 从左边偏移10px
     width: 44px; // 设置宽度
     height: 44px; // 设置高度
 

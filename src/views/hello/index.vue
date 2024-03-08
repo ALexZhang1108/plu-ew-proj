@@ -6,8 +6,8 @@
       <div class="content-container">
         <div class="title-text">EASYWEAR</div>
         <div class="subtitle-text">Try the digital experience anytime, anywhere</div>
-        <el-button class="content-button">Sign in</el-button>
-        <el-button class="content-button">Create Account</el-button>
+        <el-button class="content-button" @click.native.prevent="handleGoSignIn">Sign in</el-button>
+        <el-button class="content-button" @click.native.prevent="handleGoCreate">Create Account</el-button>
       </div>
     </div>
 
@@ -117,6 +117,12 @@ export default {
           return false
         }
       })
+    },
+    handleGoSignIn() {
+      this.$router.push({ path: '/login2' })
+    },
+    handleGoCreate() {
+      this.$router.push({ path: '/register' })
     },
     getOtherQuery(query) {
       return Object.keys(query).reduce((acc, cur) => {
@@ -274,7 +280,7 @@ $light_gray:#f2f2f2;
 
   .content-container {
     background-color: #f2f2f2; // 设置背景颜色
-    border-radius: 10px; // 设置圆角
+    border-radius: 30px; // 设置圆角
     padding-top: 50px; // 设置内边距
     margin: 0px auto; // 设置外边距，使其居中
     width: 416px; // 设置宽度

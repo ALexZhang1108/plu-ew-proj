@@ -1,13 +1,16 @@
 <template>
   <div class="login-container">
     <div class="content-container">
-      <a href="#" class="back-button">
-        <svg-icon icon-class="back" />
-      </a>
+
       <el-form ref="loginForm" :model="registerForm" :rules="registerRules" class="register-form" autocomplete="on" label-position="left">
 
         <div class="title-container">
           <h3 class="title-text">FORGOT PASSWORD</h3>
+          <div class="back-button"  >
+            <el-button type="text" @click="handleBack">
+              <img src="@/assets/new_assets_for_easywear/back.svg" alt="Back">
+            </el-button>
+          </div>
         </div>
 
         <div class="iforgot-container1">
@@ -125,22 +128,11 @@ export default {
       })
     },
     handleLogin() {
-      this.$refs.loginForm.validate(valid => {
-        if (valid) {
-          this.loading = true
-          this.$store.dispatch('user/login', this.registerForm)
-            .then(() => {
-              this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-              this.loading = false
-            })
-            .catch(() => {
-              this.loading = false
-            })
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
+      //按下按钮后redirect到reset界面
+      this.$router.push({ path: '/reset' })
+    },
+    handleBack() {
+      this.$router.push({ path: '/login2' })
     },
     getOtherQuery(query) {
       return Object.keys(query).reduce((acc, cur) => {
@@ -245,8 +237,8 @@ $light_gray:#eee;
 
 .back-button {
   position: absolute; // 使用绝对定位
-  top: 36px; // 从顶部偏移10px
-  left: 30px; // 从左边偏移10px
+  top: 8px; // 从顶部偏移10px
+  left: 20px; // 从左边偏移10px
   width: 44px; // 设置宽度
   height: 44px; // 设置高度
 

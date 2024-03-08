@@ -1,12 +1,15 @@
 <template>
   <div class="login-container">
     <div class="content-container">
-      <a href="#" class="back-button">
-        <svg-icon icon-class="back" />
-      </a>
+
       <el-form ref="loginForm" :model="registerForm" :rules="registerRules" class="register-form" autocomplete="on" label-position="left">
 
         <div class="title-container">
+          <div class="back-button"  >
+            <el-button type="text" @click="handleBack">
+              <img src="@/assets/new_assets_for_easywear/back.svg" alt="Back">
+            </el-button>
+          </div>
           <h3 class="title-text">CREATE ACCOUNT</h3>
         </div>
 
@@ -22,7 +25,7 @@
           <el-input
             ref="email"
             v-model="registerForm.email"
-            placeholder="Email"
+            placeholder="Name"
             name="email"
             type="text"
             tabindex="1"
@@ -36,7 +39,7 @@
         <el-form-item prop="email">
 
           <span class="svg-container">
-            <svg-icon icon-class="user" />
+            <svg-icon icon-class="email" />
           </span>
           <el-input
             ref="email"
@@ -107,7 +110,7 @@
             <el-checkbox v-model="agree" class="terms-checkbox" />
             <h5 class="minitext3">By registering you agree with our <a href="#" class="minitext3">Terms of Service</a> and <a href="#" class="minitext3">Privacy Policy</a></h5>
           </div>
-          <el-button :type="primary" class="content-button" @click.native.prevent="handleLogin">Done</el-button>
+          <el-button :type="primary" class="content-button" @click.native.prevent="handleLogin" :disabled="!agree">Done</el-button>
         </div>
       </el-form>
 
@@ -116,7 +119,7 @@
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
+import { validEmail, validUsername } from '@/utils/validate'
 
 export default {
   name: 'Login',
@@ -125,6 +128,14 @@ export default {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
         callback(new Error('Please enter the correct user name'))
+      } else {
+        callback()
+      }
+    }
+    const validateEmail = (rule, value, callback) => {
+
+      if (!validEmail(value)) {
+        callback(new Error('Please enter a valid email address'))
       } else {
         callback()
       }
@@ -211,6 +222,9 @@ export default {
           return false
         }
       })
+    },
+    handleBack() {
+      this.$router.push({ path:'/hello' })
     },
     getOtherQuery(query) {
       return Object.keys(query).reduce((acc, cur) => {
@@ -315,8 +329,8 @@ $light_gray:#eee;
 
 .back-button {
   position: absolute; // 使用绝对定位
-  top: 36px; // 从顶部偏移10px
-  left: 30px; // 从左边偏移10px
+  top: 8px; // 从顶部偏移10px
+  left: 20px; // 从左边偏移10px
   width: 44px; // 设置宽度
   height: 44px; // 设置高度
 
@@ -453,7 +467,7 @@ $light_gray:#eee;
 
   .show-pwd {
     position: absolute;
-    right: 10px;
+    right: 24px;
     top: 7px;
     font-size: 16px;
     color: $dark_gray;

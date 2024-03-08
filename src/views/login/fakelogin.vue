@@ -2,8 +2,7 @@
   <div class="login-container">
     <div class="content-container">
 
-
-      <el-form ref="loginForm" :model="registerForm" :rules="registerRules" class="register-form" autocomplete="on" label-position="left">
+      <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
 
         <div class="title-container">
           <div class="back-button"  >
@@ -11,23 +10,73 @@
               <img src="@/assets/new_assets_for_easywear/back.svg" alt="Back">
             </el-button>
           </div>
-          <h3 class="title-text">FORGOT PASSWORD</h3>
-        </div>
-        <div class="email-icon">
-          <svg-icon icon-class="email2" />
-        </div>
-        <div class="iforgot-container1">
-          <h4 class="iforgot-title">An e-mail has been sent to the following e-mail address:</h4>
+          <h3 class="title-text">SIGN IN</h3>
         </div>
 
-        <div class="iforgot-container2">
-          <h5 class="iforgot-content">xxxxx@xxxxxx.com</h5>
-        </div>
-        <div class="iforgot-container2">
-          <h5 class="iforgot-content">Please check your email, we have sent you a link to reset your password. </h5>
+        <div class="minititle-container">
+          <h4 class="minitext">Email</h4>
         </div>
 
-        <el-button class="content-button" @click="handleLogin">Sign in</el-button>
+        <el-form-item prop="email">
+
+          <span class="svg-container">
+            <svg-icon icon-class="email" />
+          </span>
+          <el-input
+            ref="email"
+            v-model="loginForm.email"
+            placeholder="Email"
+            name="email"
+            type="text"
+            tabindex="1"
+            autocomplete="on"
+          />
+        </el-form-item>
+        <div class="minititle-container">
+          <h4 class="minitext">Password</h4>
+        </div>
+        <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
+          <el-form-item prop="password">
+            <span class="svg-container">
+              <svg-icon icon-class="password" />
+            </span>
+            <el-input
+              :key="passwordType"
+              ref="password"
+              v-model="loginForm.password"
+              :type="passwordType"
+              placeholder="Password"
+              name="password"
+              tabindex="2"
+              autocomplete="on"
+              @keyup.native="checkCapslock"
+              @blur="capsTooltip = false"
+              @keyup.enter.native="handleLogin"
+            />
+            <span class="show-pwd" @click="showPwd">
+              <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+            </span>
+          </el-form-item>
+        </el-tooltip>
+
+        <a href="#/iforgot" class="forgot-password">Forgot password?</a>
+
+        <h4 class="minitext2">Or sign up with social account</h4>
+
+        <div class="social-icons">
+          <a href="#" class="social-icon">
+            <svg-icon icon-class="google" />
+          </a>
+          <a href="#" class="social-icon">
+            <svg-icon icon-class="facebook" />
+          </a>
+          <a href="#" class="social-icon">
+            <svg-icon icon-class="wechat" />
+          </a>
+        </div>
+
+        <el-button :type="primary" class="content-button" @click.native.prevent="handleLogin">Sign in</el-button>
+
       </el-form>
 
     </div>
@@ -36,11 +85,9 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
-import SvgIcon from '@/components/SvgIcon'
 
 export default {
   name: 'Login',
-  components: { SvgIcon },
 
   data() {
     const validateUsername = (rule, value, callback) => {
@@ -58,11 +105,11 @@ export default {
       }
     }
     return {
-      registerForm: {
+      loginForm: {
         username: 'admin',
         password: '111111'
       },
-      registerRules: {
+      loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
@@ -71,7 +118,6 @@ export default {
       loading: false,
       showDialog: false,
       redirect: undefined,
-      agree: false,
       otherQuery: {}
     }
   },
@@ -91,9 +137,9 @@ export default {
     // window.addEventListener('storage', this.afterQRScan)
   },
   mounted() {
-    if (this.registerForm.username === '') {
+    if (this.loginForm.username === '') {
       this.$refs.username.focus()
-    } else if (this.registerForm.password === '') {
+    } else if (this.loginForm.password === '') {
       this.$refs.password.focus()
     }
   },
@@ -116,8 +162,22 @@ export default {
       })
     },
     handleLogin() {
-    //go to dashboard
-      this.$router.push({ path: '/dashboard' })
+      this.$refs.loginForm.validate(valid => {
+        if (valid) {
+          this.loading = true
+          this.$store.dispatch('user/login', this.loginForm)
+            .then(() => {
+              this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+              this.loading = false
+            })
+            .catch(() => {
+              this.loading = false
+            })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     },
     handleBack() {
       this.$router.push({ path: '/hello' })
@@ -223,28 +283,28 @@ $light_gray:#eee;
   color: #ea5820;
 }
 
-.back-button {
-  position: absolute; // 使用绝对定位
-  top: 8px; // 从顶部偏移10px
-  left: 20px; // 从左边偏移10px
-  width: 44px; // 设置宽度
-  height: 44px; // 设置高度
-
-  img {
-    width: 100%; // 让图片填满整个按钮
-    height: 100%; // 让图片填满整个按钮
-  }
-  .svg-icon {
-    width: 44px; // 设置图标宽度
-    height: 44px; // 设置图标高度
-  }
-}
-
 .login-container {
   min-height: 100%;
   width: 100%;
   background-color: $bg;
   overflow: hidden;
+
+  .back-button {
+    position: absolute; // 使用绝对定位
+    top: 8px; // 从顶部偏移10px
+    left: 20px; // 从左边偏移10px
+    width: 44px; // 设置宽度
+    height: 44px; // 设置高度
+
+    img {
+      width: 100%; // 让图片填满整个按钮
+      height: 100%; // 让图片填满整个按钮
+    }
+    .svg-icon {
+      width: 44px; // 设置图标宽度
+      height: 44px; // 设置图标高度
+    }
+  }
 
   .title-container {
     position: absolute; // 设置绝对定位
@@ -266,7 +326,6 @@ $light_gray:#eee;
   .minititle-container {
     margin: 10px; // 根据需要调整间距
     text-align: left; // 将文本靠左对齐
-
   }
 
   .minitext {
@@ -277,7 +336,7 @@ $light_gray:#eee;
 
   .minitext2{
     font-size: 14px; // 设置字体大小
-    font-family: Inter, sans-serif; // 设置字体
+    font-family: "Microsoft JhengHei UI"; // 设置字体
     font-weight: normal;
     color: #3664ae; // 设置字体颜色
     margin-top: 10px;
@@ -292,76 +351,13 @@ $light_gray:#eee;
     top: 50%; // 从顶部偏移50%
     left: 50%; // 从左边偏移50%
     transform: translate(-50%, -50%); // 使用 transform 属性将元素向左和向上移动50%
-    height: 521px;// prototype 里就随便依托
-    width: 534px; // prototype 里就随便依托
+    height: 540px;// prototype 里就随便依托
+    width: 540px; // prototype 里就随便依托
     text-align: center; // 设置文本居中
 
   }
 
-  .email-icon{
-    margin: 10px; // 根据需要调整间距
-    text-align: center;
-
-    .svg-icon {
-      width: 85px; // 设置图标宽度
-      height: 85px; // 设置图标高度
-    }
-  }
-  .iforgot-container1 {
-    margin: 10px; // 根据需要调整间距
-    margin-top: 34px;
-    text-align: center;
-
-    .iforgot-title {
-      font-size: 20px; // 设置字体大小
-      font-family: "Microsoft JhengHei UI"; // 设置字体
-      color: $bg; // 设置字体颜色
-    }
-  }
-
-  .iforgot-container2{
-    margin: 10px; // 根据需要调整间距
-    text-align: center; // 将文本靠左对齐
-    margin-bottom: 30px;
-    .iforgot-content {
-      font-size: 14px; // 设置字体大小
-      font-family: "Microsoft JhengHei UI"; // 设置字体
-      color: $bg; // 设置字体颜色
-    }
-  }
-
-  .checkbox-button-container {
-    display: flex; // 使用 flex 布局
-
-    align-items: center; // 使三个元素在垂直方向上居中
-
-    .terms-container {
-      display: flex; // 使用 flex 布局
-      align-items: center; // 使元素在垂直方向上居中
-      justify-content: flex-start; // 使元素在水平方向上靠左对齐
-      padding: 0; // 移除内边距
-      margin: 0; // 移除外边距
-    }
-
-    .terms-checkbox {
-      flex:1;
-      margin: 0; // 移除外边距
-      color: #6c6aeb;
-    }
-
-    .minitext3{
-      flex:5;
-      font-size: 12px; // 设置字体大小
-      font-family: Inter; // 设置字体
-      font-weight: lighter;
-      color: $bg; // 设置字体颜色
-      //靠左对齐
-      text-align: left;
-
-    }
-  }
-
-  .register-form {
+  .login-form {
     position: relative;
     width: 520px;
     max-width: 100%;
@@ -392,7 +388,7 @@ $light_gray:#eee;
 
   .show-pwd {
     position: absolute;
-    right: 10px;
+    right: 24px;
     top: 7px;
     font-size: 16px;
     color: $dark_gray;
@@ -407,8 +403,8 @@ $light_gray:#eee;
   }
 
   .content-button {
-
-    width: auto; // 设置按钮宽度
+    display: block; // 让按钮上下排列
+    width: 107px; // 设置按钮宽度
     height: 53px; // 设置按钮高度
 
     border-radius: 81px;
@@ -416,7 +412,7 @@ $light_gray:#eee;
     background-color: #6c6aeb; // 设置按钮背景颜色
     text-align: center; // 设置按钮内的文字居中
     color: $light_gray; // 设置按钮内的文字颜色
-
+    margin: 0px auto; // 让按钮在容器中居中
     font-size: 20px; // 设置按钮内的文字大小
   }
 
